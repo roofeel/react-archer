@@ -16,6 +16,21 @@ function computeEndingArrowDirectionVector(endingAnchor) {
   }
 }
 
+function computeStartingArrowDirectionVector(startingAnchor) {
+  switch (startingAnchor) {
+    case 'left':
+      return { arrowX: -1, arrowY: 0 };
+    case 'right':
+      return { arrowX: 1, arrowY: 0 };
+    case 'top':
+      return { arrowX: 0, arrowY: -1 };
+    case 'bottom':
+      return { arrowX: 0, arrowY: 1 };
+    default:
+      return { arrowX: 0, arrowY: 0 };
+  }
+}
+
 export function computeEndingPointAccordingToArrow(
   xEnd,
   yEnd,
@@ -31,38 +46,19 @@ export function computeEndingPointAccordingToArrow(
   return { xe, ye };
 }
 
-export function computeStartingAnchorPosition(xs, ys, xe, ye, startingAnchor) {
-  if (startingAnchor === 'top' || startingAnchor === 'bottom') {
-    return {
-      xa1: xs,
-      ya1: ys + (ye - ys) / 2,
-    };
-  }
-  if (startingAnchor === 'left' || startingAnchor === 'right') {
-    return {
-      xa1: xs + (xe - xs) / 2,
-      ya1: ys,
-    };
-  }
+export function computeStartingPointAccordingToArrow(
+  xStart,
+  yStart,
+  arrowLength,
+  strokeWidth,
+  startingAnchor,
+) {
+  const { arrowX, arrowY } = computeStartingArrowDirectionVector(startingAnchor);
 
-  return { xa1: xs, ya1: ys };
-}
+  const xs = xStart + arrowX * arrowLength * strokeWidth / 2;
+  const ys = yStart + arrowY * arrowLength * strokeWidth / 2;
 
-export function computeEndingAnchorPosition(xs, ys, xe, ye, endingAnchor) {
-  if (endingAnchor === 'top' || endingAnchor === 'bottom') {
-    return {
-      xa2: xe,
-      ya2: ye - (ye - ys) / 2,
-    };
-  }
-  if (endingAnchor === 'left' || endingAnchor === 'right') {
-    return {
-      xa2: xe - (xe - xs) / 2,
-      ya2: ye,
-    };
-  }
-
-  return { xa2: xe, ya2: ye };
+  return { xs, ys };
 }
 
 const SvgArrow = ({
@@ -70,14 +66,20 @@ const SvgArrow = ({
   startingAnchor,
   endingPoint,
   endingAnchor,
+  startArrow,
   strokeColor,
   arrowLength,
   strokeWidth,
 }) => {
   const actualArrowLength = arrowLength * 2;
 
-  const xs = startingPoint.x;
-  const ys = startingPoint.y;
+  const { xs, ys } = computeStartingPointAccordingToArrow(
+    startingPoint.x,
+    startingPoint.y,
+    actualArrowLength,
+    strokeWidth,
+    startingAnchor,
+  );
 
   const { xe, ye } = computeEndingPointAccordingToArrow(
     endingPoint.x,
@@ -95,6 +97,7 @@ const SvgArrow = ({
       d={pathString}
       style={{ fill: 'none', stroke: strokeColor, strokeWidth }}
       markerEnd={`url(${location.href}#arrow)`}
+      markerStart={startArrow ? `url(${location.href}#arrow-start)` : null}
     />
   );
 };

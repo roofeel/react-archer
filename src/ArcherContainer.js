@@ -140,6 +140,7 @@ export class ArcherContainer extends React.Component {
         sd.from.id,
         parentCoordinates,
       );
+      const startArrow = !!sd.from.startArrow;
       const endingAnchor = sd.to.anchor;
       const endingPoint = this.getPointCoordinatesFromAnchorPosition(
         sd.to.anchor,
@@ -153,6 +154,7 @@ export class ArcherContainer extends React.Component {
           startingAnchor={startingAnchor}
           endingPoint={endingPoint}
           endingAnchor={endingAnchor}
+          startArrow={startArrow}
           strokeColor={this.props.strokeColor}
           arrowLength={this.props.arrowLength}
           strokeWidth={this.props.strokeWidth}
@@ -165,6 +167,9 @@ export class ArcherContainer extends React.Component {
     const SvgArrows = this.computeArrows();
     const arrowPath = `M0,0 L0,${this.props.arrowThickness} L${this.props
       .arrowLength - 1},${this.props.arrowThickness / 2} z`;
+    const arrowStartPath = `M0,${this.props.arrowThickness / 2} L${this.props
+      .arrowLength - 1},${this.props.arrowThickness} L${this.props
+      .arrowLength - 1},0 z`;
 
     return (
       <div
@@ -183,6 +188,17 @@ export class ArcherContainer extends React.Component {
               markerUnits="strokeWidth"
             >
               <path d={arrowPath} fill={this.props.strokeColor} />
+            </marker>
+            <marker
+              id="arrow-start"
+              markerWidth={this.props.arrowLength}
+              markerHeight={this.props.arrowThickness}
+              refX="0"
+              refY={this.props.arrowThickness / 2}
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d={arrowStartPath} fill={this.props.strokeColor} />
             </marker>
           </defs>
           {SvgArrows}
