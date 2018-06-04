@@ -87,23 +87,8 @@ const SvgArrow = ({
     endingAnchor,
   );
 
-  const { xa1, ya1 } = computeStartingAnchorPosition(
-    xs,
-    ys,
-    xe,
-    ye,
-    startingAnchor,
-  );
-  const { xa2, ya2 } = computeEndingAnchorPosition(
-    xs,
-    ys,
-    xe,
-    ye,
-    endingAnchor,
-  );
-
   const pathString =
-    `M${xs},${ys} ` + `C${xa1},${ya1} ${xa2},${ya2} ` + `${xe},${ye}`;
+    `M${xs},${ys} ` + `L${xe},${ye}`;
 
   return (
     <path
