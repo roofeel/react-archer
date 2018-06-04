@@ -55,8 +55,8 @@ export function computeStartingPointAccordingToArrow(
 ) {
   const { arrowX, arrowY } = computeStartingArrowDirectionVector(startingAnchor);
 
-  const xs = xStart + arrowX * arrowLength * strokeWidth / 2;
-  const ys = yStart + arrowY * arrowLength * strokeWidth / 2;
+  const xs = xStart + arrowX;
+  const ys = yStart + arrowY;
 
   return { xs, ys };
 }
